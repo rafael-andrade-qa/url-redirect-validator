@@ -1,0 +1,17 @@
+[
+    {
+        "initial_url": "https://example.com",
+        "expected_redirect_url": "https://example.com/home",
+        "expected_status_code": 301
+    },
+    {
+        "initial_url": "https://google.com",
+        "expected_redirect_url": "https://test.com/welcome",
+        "expected_status_code": 302
+    },
+    {
+        "initial_url": "https://www.iana.org/help/example-domains",
+        "expected_redirect_url": "https://demo.com/start",
+        "expected_status_code": 307
+    }
+]
