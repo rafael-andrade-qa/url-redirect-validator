@@ -27,6 +27,7 @@ def generate_redirect_json(filter_string=None):
                 url,
                 headers=headers,
                 allow_redirects=False,
+                verify=False
             )
             
             if response.status_code != 200:
