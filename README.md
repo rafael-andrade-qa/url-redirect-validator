@@ -5,20 +5,18 @@ This project is an automation tool for validating URL redirects and expected sta
 
 ```bash
 📦url-redirect-validator
-┣ 📂jsons
-┃ ┣ 📂check_redirects
-┃ ┃ ┗ 📜redirects-example.json
-┃ ┗ 📂generate_redirect
-┃ ┃ ┣ 📜redirect_urls_example.json
-┃ ┃ ┣ 📜status_codes_example.json
-┃ ┃ ┗ 📜urls_example.json
-┣ 📂reports
-┃ ┗ 📜results.json
-┣ 📜.gitignore
-┣ 📜check_redirects.py
-┣ 📜generate_redirect_json.py
-┣ 📜README.md
-┗ 📜requirements.txt
+ ┣ 📂json
+ ┃ ┗ 📜redirects.json
+ ┣ 📂reports
+ ┃ ┣ 📜failed_tests.txt
+ ┃ ┗ 📜results.json
+ ┣ 📜.env
+ ┣ 📜.env-example
+ ┣ 📜.gitignore
+ ┣ 📜check_redirects.py
+ ┣ 📜generate_redirect_json.py
+ ┣ 📜README.md
+ ┗ 📜requirements.txt
 ```
 
 ## Requirements
