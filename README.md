@@ -77,16 +77,16 @@ This project is an automation tool for validating URL redirects and expected sta
 
 ### Generate Redirect JSON with `generate_redirect_json.py`
 
-The `generate_redirect_json.py` script generates a JSON file with redirects to be validated by the `check_redirects.py` script. It combines lists of initial URLs, redirect URLs, and expected status codes from the provided JSON files.
+The `generate_redirect_json.py` script generates a JSON file with redirects to be validated by the `check_redirects.py` script.
 
 #### Command
 
    ```bash
-   python3 generate_redirect_json.py jsons/generate_redirect/urls_example.json jsons/generate_redirect/redirect_urls_example.json jsons/generate_redirect/status_codes_example.json
+   python3 generate_redirect_json.py "<optional_filter_string>"
    ```
 
    ```bash
-   python generate_redirect_json.py jsons/generate_redirect/urls_example.json jsons/generate_redirect/redirect_urls_example.json jsons/generate_redirect/status_codes_example.json
+   python generate_redirect_json.py "<optional_filter_string>"
    ```
 
 #### Example of Generated File
@@ -104,20 +104,20 @@ The above command will generate a `redirects.json` file with the following struc
 ]
 ```
 
-This file will be saved in the `jsons/check_redirects` folder as `redirects.json`.
+This file will be saved in the `./jsons` folder as `redirects.json`.
 
 ### Validate Redirects with `check_redirects.py`
 
-The `check_redirects.py` script reads the generated JSON file and performs the redirect tests, verifying if the initial URL redirects to the expected URL with the correct status code. A report with the test results is displayed in the terminal and saved in `reports/results.json`.
+The `check_redirects.py` script reads a JSON file containing a list of redirects, tests whether each initial URL redirects to the expected destination URL with the correct HTTP status code, and handles both absolute and relative redirects. It generates a summary of test results, categorizing them as passed, failed, or errors, and saves the results in `reports/results.json`. Additionally, failed tests are logged in a separate file, `reports/failed_tests.txt`, for further review.
 
 #### Command
 
    ```bash
-   python3 check_redirects.py jsons/check_redirects/redirects-example.json
+   python3 check_redirects.py <json_file_path> <base_url>"
    ```
 
    ```bash
-   python check_redirects.py jsons/check_redirects/redirects-example.json
+   python check_redirects.py <json_file_path> <base_url>"
    ```
 
 #### Terminal Output Example
@@ -140,7 +140,3 @@ Example output:
 ```
 
 The final report with details for each redirect will be saved in `reports/results.json`.
-
-#### Example File `redirects-example.json`
-
-For convenience, an example file `redirects-example.json` is included in `jsons/check_redirects`. This file follows the structure required by the `check_redirects.py` script.
