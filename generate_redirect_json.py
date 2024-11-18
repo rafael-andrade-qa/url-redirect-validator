@@ -20,24 +20,41 @@ def generate_redirect_json(filter_string=None):
     while True:
         url = f"{base_url}?apiKey={API_KEY}&limit={limit}&offset={offset}"
         
-        response = requests.get(url, headers=headers)
+        print(f"\n🌐 Fetching data from: {url}")
         
-        if response.status_code != 200:
-            print("❌ Error: Failed to retrieve data from Builder.io")
+        try:
+            response = requests.get(
+                url,
+                headers=headers,
+                allow_redirects=False,
+            )
+            
+            if response.status_code != 200:
+                print(f"❌ Error: Failed to retrieve data. Status Code: {response.status_code}")
+                return
+            
+            print("\n📋 Response Headers:")
+            for key, value in response.headers.items():
+                print(f"   {key}: {value}")
+
+            data = response.json()
+            
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Error during request: {e}")
             return
-        
-        data = response.json()
-        
+
         results = data.get('results', [])
         if not results:
-            print("No more redirects found. Exiting...")
+            print("\n✅ No more redirects found. Exiting...\n")
             break
         
+        print(f"\n🔎 Found {len(results)} entries. Filtering...\n")
         for entry in results:
             if entry.get("published") == "published":
                 name = entry.get("name", "")
                 
                 if filter_string and filter_string not in name:
+                    print(f"⚠️ Skipping '{name}' (does not match filter).")
                     continue
                 
                 source_url = entry['data']['source']
@@ -45,6 +62,8 @@ def generate_redirect_json(filter_string=None):
                 permanent = entry['data']['permanent']
                 
                 status_code = 301 if permanent else 302
+                
+                print(f"✅ Adding redirect: {source_url} → {destination_url} (Status: {status_code})")
                 
                 all_redirects.append({
                     'initial_url': source_url,
@@ -55,7 +74,7 @@ def generate_redirect_json(filter_string=None):
         offset += len(results)
         
         if len(results) < limit:
-            print("All pages fetched. Exiting...")
+            print("\n📦 All pages fetched. Exiting...\n")
             break
     
     output_json = {'redirects': all_redirects}
@@ -63,7 +82,8 @@ def generate_redirect_json(filter_string=None):
     with open('./json/redirects.json', 'w') as json_file:
         json.dump(output_json, json_file, indent=4)
     
-    print("✅ Redirect JSON generated and saved as './json/redirects.json'")
+    print("\n🎉 Redirect JSON successfully generated!")
+    print("📂 File saved at: './json/redirects.json'\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate JSON of redirects from Builder.io API")
