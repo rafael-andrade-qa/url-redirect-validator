@@ -5,21 +5,26 @@ import sys
 
 def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
     try:
-        response = requests.get(url_to_test, allow_redirects=True)
-        final_url = response.url
+        response = requests.get(url_to_test, allow_redirects=False)
         status_code = response.status_code
+        redirect_url = response.headers.get("Location")
+        
+        if redirect_url and not redirect_url.startswith("http"):
+            from urllib.parse import urljoin
+            redirect_url = urljoin(url_to_test, redirect_url)
+        
         result = {
             "initial_url": url_to_test,
             "expected_redirect_url": expected_redirect_url,
-            "actual_redirect_url": final_url,
+            "actual_redirect_url": redirect_url,
             "expected_status_code": expected_status_code,
             "actual_status_code": status_code,
-            "status": "Passed" if final_url == expected_redirect_url and status_code == expected_status_code else "Failed"
+            "status": "Passed" if redirect_url == expected_redirect_url and status_code == expected_status_code else "Failed"
         }
         
         print("\n🔍 Testing URL:", url_to_test)
         print(f"➡️  Expected Redirect: {expected_redirect_url}")
-        print(f"🔄 Actual Redirected URL: {final_url}")
+        print(f"🔄 Actual Redirected URL: {redirect_url or 'None (no redirection)'}")
         print(f"✅ Expected Status Code: {expected_status_code}")
         print(f"📋 Actual Status Code: {status_code}")
         
