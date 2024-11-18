@@ -86,9 +86,10 @@ def main(json_file_path, base_url):
     print("📁 JSON report saved as './reports/results.json'.")
     
     if failed_tests:
-        with open("reports/failed_tests.txt", "w") as failed_file:
-            failed_file.writelines(failed_tests)
-        print("📁 Failed tests report saved as './reports/failed_tests.txt'.")
+        failed_tests_json = [result for result in results if result["status"] == "Failed"]
+        with open("reports/failed_tests.json", "w") as failed_file:
+            json.dump(failed_tests_json, failed_file, indent=4)
+        print("📁 Failed tests report saved as './reports/failed_tests.json'.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
