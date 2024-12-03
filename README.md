@@ -111,11 +111,11 @@ The `check_redirects.py` script reads a JSON file containing a list of redirects
 #### Command
 
    ```bash
-   python3 check_redirects.py <json_file_path> <base_url>"
+   python3 check_redirects.py <json_file_path> <base_url>
    ```
 
    ```bash
-   python check_redirects.py <json_file_path> <base_url>"
+   python check_redirects.py <json_file_path> <base_url>
    ```
 
 #### Terminal Output Example
