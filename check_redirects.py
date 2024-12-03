@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import sys
+import time
 from urllib.parse import urljoin, urlparse
 
 def normalize_path(url):
@@ -63,9 +64,26 @@ def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
             "error": str(e),
         }
 
+def estimate_time_per_url(url_sample, base_url):
+    """Calcula o tempo médio por URL com base em uma amostra."""
+    start_time = time.time()
+    for entry in url_sample:
+        initial_url = urljoin(base_url, entry["initial_url"])
+        requests.get(initial_url, allow_redirects=False)
+    end_time = time.time()
+    avg_time = (end_time - start_time) / len(url_sample)
+    return avg_time
+
 def main(json_file_path, base_url):
     with open(json_file_path, 'r') as file:
         data = json.load(file)
+
+    total_urls = len(data["redirects"])
+    url_sample = data["redirects"][:5] if total_urls >= 5 else data["redirects"]
+    avg_time_per_url = estimate_time_per_url(url_sample, base_url)
+    estimated_total_time = avg_time_per_url * total_urls
+
+    print(f"\n⏱️ Estimativa de tempo total: {estimated_total_time:.2f} segundos ({estimated_total_time / 60:.2f} minutos)\n")
 
     results = []
     failed_tests = []
