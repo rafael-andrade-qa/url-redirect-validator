@@ -5,10 +5,13 @@ import sys
 import time
 from urllib.parse import urljoin, urlparse
 
-def normalize_path(url):
-    """Remove a barra final do caminho da URL, se existir."""
+def normalize_url(url):
+    """Normaliza a URL removendo barras finais e garantindo esquema consistente."""
+    if not url:
+        return None
     parsed = urlparse(url)
-    return parsed.path.rstrip('/')
+    normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
+    return normalized
 
 def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
     try:
@@ -19,13 +22,13 @@ def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
         if redirect_url and not redirect_url.startswith("http"):
             redirect_url = urljoin(url_to_test, redirect_url)
 
-        # Normalizar caminhos para comparação
-        expected_path = normalize_path(expected_redirect_url)
-        actual_path = normalize_path(redirect_url or "")
+        # Normaliza URLs para comparação precisa
+        expected_normalized = normalize_url(expected_redirect_url)
+        actual_normalized = normalize_url(redirect_url)
 
         status = (
             "Passed"
-            if expected_path == actual_path and status_code in expected_status_code
+            if actual_normalized == expected_normalized and status_code in expected_status_code
             else "Failed"
         )
 
