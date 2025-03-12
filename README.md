@@ -71,6 +71,20 @@ This project is an automation tool for validating URL redirects and expected sta
    pip install -r requirements.txt
    ```
 
+## Setting Up Project Credentials
+
+1. Copy and Rename Configuration File
+
+   ```bash
+   cp .env-example .env
+   ```
+
+2. Open the newly created `.env` file and populate it with the appropriate secrets.
+
+   ```bash
+   API_KEY=your_builder_api_key
+   ``` 
+
 ## Usage
 
 ### Generate Redirect JSON with `generate_redirect_json.py`

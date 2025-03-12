@@ -62,14 +62,10 @@ def generate_redirect_json(filter_string=None):
                 destination_url = entry['data']['destination']
                 permanent = entry['data']['permanent']
                 
-                status_code = 301 if permanent else 302
-                
-                print(f"✅ Adding redirect: {source_url} → {destination_url} (Status: {status_code})")
-                
                 all_redirects.append({
                     'initial_url': source_url,
                     'redirected_url': destination_url,
-                    'status_code': status_code
+                    'permanent': permanent
                 })
 
         offset += len(results)

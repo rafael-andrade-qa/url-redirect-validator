@@ -25,7 +25,7 @@ def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
 
         status = (
             "Passed"
-            if expected_path == actual_path and status_code == expected_status_code
+            if expected_path == actual_path and status_code in expected_status_code
             else "Failed"
         )
 
@@ -91,7 +91,7 @@ def main(json_file_path, base_url):
     for entry in data["redirects"]:
         initial_url = urljoin(base_url, entry["initial_url"])
         expected_redirect_url = urljoin(base_url, entry["redirected_url"])
-        expected_status_code = entry["status_code"]
+        expected_status_code = [301, 308] if entry["permanent"] else [302, 307]
 
         result = check_redirect(initial_url, expected_redirect_url, expected_status_code)
         results.append(result)
