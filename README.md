@@ -19,6 +19,11 @@ This project is an automation tool for validating URL redirects and expected sta
  ┗ 📜requirements.txt
 ```
 
+## 📺 Video Tutorial
+
+Watch the full tutorial on YouTube:  
+[![URL Redirect Validator - Video Tutorial](https://img.shields.io/badge/YouTube-Watch-red?style=for-the-badge&logo=youtube)](https://youtu.be/kwuJtSg9_IY)
+
 ## Requirements
 
 - Python 3.x
