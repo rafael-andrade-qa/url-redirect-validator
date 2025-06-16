@@ -2,10 +2,14 @@ import requests
 import json
 import os
 import argparse
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
+
+def substitute_wildcard(path: str, token: str = "wildcard") -> str:
+    return path.replace("*", token) if path else path
 
 def generate_redirect_json(filter_string=None):
     base_url = "https://cdn.builder.io/api/v3/content/redirects"
@@ -63,8 +67,8 @@ def generate_redirect_json(filter_string=None):
                 permanent = entry['data']['permanent']
                 
                 all_redirects.append({
-                    'initial_url': source_url,
-                    'redirected_url': destination_url,
+                    'initial_url': substitute_wildcard(source_url),
+                    'redirected_url': substitute_wildcard(destination_url),
                     'permanent': permanent
                 })
 

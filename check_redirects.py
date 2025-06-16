@@ -3,6 +3,7 @@ import requests
 import json
 import sys
 import time
+import re
 from urllib.parse import urljoin, urlparse
 
 def normalize_url(url):
@@ -12,6 +13,9 @@ def normalize_url(url):
     parsed = urlparse(url)
     normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
     return normalized
+
+def substitute_wildcard(path: str, token: str = "wildcard") -> str:
+    return path.replace("*", token) if path else path
 
 def check_redirect(url_to_test, expected_redirect_url, expected_status_code):
     try:
@@ -71,7 +75,7 @@ def estimate_time_per_url(url_sample, base_url):
     """Calcula o tempo médio por URL com base em uma amostra."""
     start_time = time.time()
     for entry in url_sample:
-        initial_url = urljoin(base_url, entry["initial_url"])
+        initial_url = urljoin(base_url, substitute_wildcard(entry["initial_url"]))
         requests.get(initial_url, allow_redirects=False)
     end_time = time.time()
     avg_time = (end_time - start_time) / len(url_sample)
@@ -92,10 +96,10 @@ def main(json_file_path, base_url):
     failed_tests = []
 
     for entry in data["redirects"]:
-        initial_url = urljoin(base_url, entry["initial_url"])
-        expected_redirect_url = urljoin(base_url, entry["redirected_url"])
-        expected_status_code = [301, 308] if entry["permanent"] else [302, 307]
+        initial_url = urljoin(base_url, substitute_wildcard(entry["initial_url"]))
+        expected_redirect_url = urljoin(base_url, substitute_wildcard(entry["redirected_url"]))
 
+        expected_status_code = [301, 308] if entry["permanent"] else [302, 307]
         result = check_redirect(initial_url, expected_redirect_url, expected_status_code)
         results.append(result)
 
