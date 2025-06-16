@@ -1,159 +1,122 @@
-# URL Redirect Validator
-This project is an automation tool for validating URL redirects and expected status codes. It includes two main scripts: `generate_redirect_json.py`, which creates a JSON of redirects from lists of URLs and status codes, and `check_redirects.py`, which tests the specified redirects and generates a report with the results.
+# 🔁 URL Redirect Validator
 
-## Project Structure
+Ferramenta automatizada para **validar redirecionamentos de URL** com base nos dados publicados via Builder.io. Gera relatórios com os resultados dos testes, identificando URLs que não estão redirecionando corretamente ou retornam códigos HTTP incorretos.
 
-```bash
-📦url-redirect-validator
- ┣ 📂json
- ┃ ┗ 📜redirects.json
- ┣ 📂reports
- ┃ ┣ 📜failed_tests.txt
- ┃ ┗ 📜results.json
- ┣ 📜.env
- ┣ 📜.env-example
- ┣ 📜.gitignore
- ┣ 📜check_redirects.py
- ┣ 📜generate_redirect_json.py
- ┣ 📜README.md
- ┗ 📜requirements.txt
-```
+## ✨ Visão Geral
 
-## 📺 Video Tutorial
+Este projeto executa duas etapas principais:
 
-Watch the full tutorial on YouTube:  
-[![URL Redirect Validator - Video Tutorial](https://img.shields.io/badge/YouTube-Watch-red?style=for-the-badge&logo=youtube)](https://youtu.be/kwuJtSg9_IY)
+1. **`generate_redirect_json.py`**  
+   Consulta a API do Builder.io para gerar um arquivo `redirects.json` contendo os redirecionamentos publicados.
 
-## Requirements
+2. **`check_redirects.py`**  
+   Lê o arquivo JSON e testa se cada redirecionamento está funcionando corretamente (com o status HTTP esperado). Gera relatórios organizados em `./reports`.
+
+> ✅ Suporte a **wildcards** (ex: `/rafa-test/*/`) substituindo por `wildcard` para evitar falsos negativos durante a validação.
+
+---
+
+## ⚙️ Requisitos
 
 - Python 3.x
-- [Requests](https://pypi.org/project/requests/) library
+- [requests](https://pypi.org/project/requests/)
+- Acesso à API do Builder.io com uma `API_KEY` válida
 
-## Setting up a Virtual Environment
+---
 
-1. Check if Python is installed: Open your terminal and run the following command to check if Python is installed:
+## 📦 Instalação
 
-   ```bash
-   python3 --version
-   ```
-
-   ```bash
-   python --version
-   ```
-
-    Note: if python is not installed, download and install [here](https://www.python.org/downloads/).
-
-2. Run the following command to create a virtual environment named `venv`:
-
-   ```bash
-   python3 -m venv venv
-   ```
-
-   ```bash
-   python -m venv venv
-   ```
-
-3. Activate the virtual environment using the command:
-
-   ```bash
-   source venv/bin/activate
-   ```
-
-   ```bash
-   .\venv\Scripts\activate
-   ```
-    The command to exit a virtual environment (venv) in Python is: `deactivate`
-
-## Installing Dependencies
-
-- Install the dependencies listed in the `requirements.txt` file using the following command:
-
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Setting Up Project Credentials
-
-1. Copy and Rename Configuration File
-
-   ```bash
-   cp .env-example .env
-   ```
-
-2. Open the newly created `.env` file and populate it with the appropriate secrets.
-
-   ```bash
-   API_KEY=your_builder_api_key
-   ``` 
-
-## Usage
-
-### Generate Redirect JSON with `generate_redirect_json.py`
-
-The `generate_redirect_json.py` script generates a JSON file with redirects to be validated by the `check_redirects.py` script.
-
-#### Command
-
-   ```bash
-   python3 generate_redirect_json.py "<optional_filter_string>"
-   ```
-
-   ```bash
-   python generate_redirect_json.py "<optional_filter_string>"
-   ```
-
-#### Example of Generated File
-
-The above command will generate a `redirects.json` file with the following structure:
+### 1. Clone o projeto
 
 ```bash
-[
-    {
-        "initial_url": "https://example.com",
-        "expected_redirect_url": "https://example.com/home",
-        "expected_status_code": 301
-    },
-    ...
-]
+git clone https://github.com/rafael-andrade-qa/url-redirect-validator.git
+cd url-redirect-validator
 ```
 
-This file will be saved in the `./jsons` folder as `redirects.json`.
-
-### Validate Redirects with `check_redirects.py`
-
-The `check_redirects.py` script reads a JSON file containing a list of redirects, tests whether each initial URL redirects to the expected destination URL with the correct HTTP status code, and handles both absolute and relative redirects. It generates a summary of test results, categorizing them as passed, failed, or errors, and saves the results in `reports/results.json`. Additionally, failed tests are logged in a separate file, `reports/failed_tests.txt`, for further review.
-
-#### Command
-
-   ```bash
-   python3 check_redirects.py <json_file_path> <base_url>
-   ```
-
-   ```bash
-   python check_redirects.py <json_file_path> <base_url>
-   ```
-
-#### Terminal Output Example
-
-Example output:
+### 2. Crie e ative o ambiente virtual (opcional, mas recomendado)
 
 ```bash
-🔍 Testing URL: https://example.com
-➡️  Expected Redirect: https://example.com/home
-🔄 Actual Redirected URL: https://example.com/home
-✅ Expected Status Code: 301
-📋 Actual Status Code: 301
-🎉 Test Passed: Redirection and status code match!
-...
-📊 Summary Report
-✅ Passed: 3
-❌ Failed: 1
-🚨 Errors: 0
-📁 JSON report saved as './reports/results.json'.
+python -m venv venv
+# Ativação no macOS/Linux
+source venv/bin/activate
+# Ativação no Windows
+.\venv\Scripts\activate 
 ```
 
-The final report with details for each redirect will be saved in `reports/results.json`.
+### 3. Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure a chave da API
+
+Copie o arquivo `.env-example` e edite com sua chave da API Builder:
+
+```bash
+cp .env-example .env
+```
+
+Abra `.env` e edite:
+
+```
+API_KEY=sua_chave_aqui
+```
+
+---
+
+## 🚀 Como Usar
+
+### 1. Gerar lista de redirecionamentos (Builder.io)
+
+```bash
+python generate_redirect_json.py
+```
+
+> Opcional: filtre por nome do redirect
+```bash
+python generate_redirect_json.py "meu-filter"
+```
+
+O arquivo será salvo em:  
+```
+./json/redirects.json
+```
+
+---
+
+### 2. Validar os redirecionamentos
+
+```bash
+python check_redirects.py ./json/redirects.json https://www.seusite.com.br
+```
+
+O script testará:
+
+- Se cada URL inicial (`initial_url`) redireciona corretamente para a URL de destino (`redirected_url`)
+- Se o código HTTP retornado está dentro do esperado (ex: 301 para redirect permanente)
+
+#### Saídas geradas:
+
+- ✅ `./reports/results.json`: todos os resultados
+- ❌ `./reports/failed_tests.json`: somente redirecionamentos com falha
+
+---
+
+## 🧠 Suporte a Wildcards
+
+Ao detectar URLs com `*`, como:
+
+```json
+{
+  "initial_url": "/rafa-test/*/",
+  "redirected_url": "/builder/homes/*/",
+  "permanent": true
+}
+```
+
+O script automaticamente substitui `*` por `wildcard` para simular e validar corretamente:
+
+```
+/rafa-test/wildcard/ → /builder/homes/wildcard/
+```
